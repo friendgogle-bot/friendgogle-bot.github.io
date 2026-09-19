@@ -1,1 +1,1 @@
-# -friendgogle-bot.github.io
+# friendgogle-bot.github.io
