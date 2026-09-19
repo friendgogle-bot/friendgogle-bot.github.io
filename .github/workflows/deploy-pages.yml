@@ -1,0 +1,8 @@
+name: Publish official site
+on:
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo Website deployment prepared
