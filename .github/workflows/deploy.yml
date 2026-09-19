@@ -1,0 +1,50 @@
+name: Publish Yuanche Official Site
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: yuanche-pages
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Bootstrap public website once
+        shell: bash
+        run: |
+          set -euo pipefail
+          if test -f index.html; then
+            echo "Public site files already present; no bootstrap download needed."
+            exit 0
+          fi
+          curl --fail --location --retry 3 --connect-timeout 20 --max-time 210 'https://sdmntprwestus2.oaiusercontent.com/files/00000000-270c-81f8-9449-15f2e0c0ebb4/raw?se=2026-09-19T12%3A11%3A33Z&sp=r&sv=2026-02-06&sr=b&scid=aa0ea77f-cec8-5bd3-a345-436039eefd49&skoid=f5e14fda-2af7-44a3-9d18-d372ffcad871&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-19T02%3A40%3A59Z&ske=2026-09-20T02%3A40%3A59Z&sks=b&skv=2026-02-06&sig=wqcwm7GMx7mCdFwRAjM8PX6DC4rgTItxyOfhjz7vCuQ%3D' -o /tmp/yuanche-site.zip
+          echo '61aed9976e8784502e4b8cb14595d97d24fdbf245c7033cc8bee35aaf06957e7  /tmp/yuanche-site.zip' | sha256sum -c -
+          unzip -q /tmp/yuanche-site.zip -d /tmp/yuanche-public
+          test -f /tmp/yuanche-public/index.html
+          test -f /tmp/yuanche-public/assets/covers/cut-to-one.webp
+          test ! -e /tmp/yuanche-public/internal
+          cp -a /tmp/yuanche-public/. ./
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .nojekyll 404.html about.html assets books books.html contact.html favicon.svg index.html reading.html robots.txt search.js sitemap.xml style.css
+          git commit -m 'Publish Yuanche site v0.7 public assets'
+          git push origin HEAD:main
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: .
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
