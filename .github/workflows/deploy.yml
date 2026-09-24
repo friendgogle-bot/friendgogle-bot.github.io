@@ -31,6 +31,9 @@ jobs:
           test -f assets/og/cut-to-one.png
           test -f assets/og/bian-le-you-mei-bian.png
           test -f contact.js
+          node scripts/verify-contact-formspree.mjs
+          if grep -q 'FORM_ID_REQUIRED' contact.html; then echo 'Formspree form ID is not configured; release denied'; exit 1; fi
+          grep -Eq 'action="https://formspree.io/f/[A-Za-z0-9]+"' contact.html
           test -f site-search.js
           test -f robots.txt
           test -f sitemap.xml
@@ -89,7 +92,9 @@ jobs:
           grep -q 'https://formsubmit.co/yuanche.workflow@gmail.com' /tmp/yuanche-activation.html
           curl --fail --silent --show-error --location "${base}/contact.html" -o /tmp/yuanche-contact.html
           grep -q 'yuanche.workflow@gmail.com' /tmp/yuanche-contact.html
-          grep -q '自行傳送' /tmp/yuanche-contact.html
+          grep -q 'https://formspree.io/f/' /tmp/yuanche-contact.html
+          grep -q 'name="_gotcha"' /tmp/yuanche-contact.html
+          grep -q 'name="consent"' /tmp/yuanche-contact.html
           curl --fail --silent --show-error --location "${base}/sitemap.xml" -o /tmp/yuanche-sitemap.xml
           grep -q 'releases.html' /tmp/yuanche-sitemap.xml
           grep -q 'reading/site-announcement.html' /tmp/yuanche-sitemap.xml
