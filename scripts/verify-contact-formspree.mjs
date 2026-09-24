@@ -10,7 +10,7 @@ assert.match(html, /name="subject"/);
 assert.match(html, /name="email" type="email"/);
 assert.match(html, /name="message"[^>]*minlength="3"[^>]*maxlength="1800"/);
 assert.match(html, /name="consent"[^>]*required/);
-assert.match(html, /Formspree 處理並轉寄/);
+assert.match(html, /Formspree 處理並儲存在其管理後台/);
 assert.match(html, /mailto:yuanche\.workflow@gmail\.com/);
 assert.doesNotMatch(html,/formsubmit\.co|name="_next"|name="_honey"|contact-received\.html/);
 assert.match(css,/\.contact-honeypot/);
