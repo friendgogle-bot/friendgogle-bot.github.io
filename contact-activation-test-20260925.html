@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>原澈｜一次性站內留言啟用測試</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>body{background:#f8f9fc;color:#26354b;font:18px/1.65 system-ui,-apple-system,sans-serif;margin:0;padding:22px}main{max-width:640px;margin:30px auto;background:white;border-radius:16px;padding:25px;box-shadow:0 5px 24px #26354b14}h1{line-height:1.25;font-size:1.6rem}label{display:block;margin:18px 0 7px}textarea,input{box-sizing:border-box;width:100%;font:inherit;padding:10px;border:1px solid #8792a4;border-radius:8px}textarea{min-height:130px}button{background:#293e61;color:#fff;border:0;border-radius:8px;padding:13px 22px;font:inherit;margin-top:17px}.muted{color:#526176;font-size:.95rem}a{color:#264c85}.checkbox{display:flex;gap:10px;align-items:flex-start}.checkbox input{width:auto;margin-top:10px}.honeypot{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}</style>
+</head>
+<body><main>
+<p class="muted">原澈官網｜Contact Activation QA · 一次性測試，不是對外聯絡頁</p>
+<h1>官方信箱 FormSubmit 啟用測試</h1>
+<p>此頁透過已上線的 HTTPS 網站提供，修正先前以本機 HTML 開啟而被 FormSubmit 拒絕的問題。收件信箱固定為 <strong>yuanche.workflow@gmail.com</strong>。</p>
+<p>第一次提交通常會寄送啟用確認信；請在官方信箱檢查並由信箱持有人確認。<strong>測試頁顯示成功不代表 Gmail 已實收。</strong></p>
+<form action="https://formsubmit.co/yuanche.workflow@gmail.com" method="POST" accept-charset="UTF-8">
+<input type="hidden" name="_subject" value="原澈官網｜一次性啟用測試">
+<input type="hidden" name="_template" value="table">
+<div class="honeypot" aria-hidden="true"><label>請留空<input type="text" name="_honey" tabindex="-1" autocomplete="off"></label></div>
+<label for="yc-name">稱呼（可選）</label><input id="yc-name" name="name" maxlength="80" autocomplete="name">
+<label for="yc-email">回覆信箱（可選）</label><input id="yc-email" name="email" type="email" maxlength="254" autocomplete="email">
+<label for="yc-message">測試內容</label><textarea id="yc-message" name="message" minlength="3" maxlength="500" required>YC-F4-20260925-INIT｜一次性啟用測試（不含私人資料）</textarea>
+<label class="checkbox"><input type="checkbox" name="consent" value="同意第三方處理" required><span>我了解測試內容將交由第三方 FormSubmit 處理並轉寄原澈官方信箱，不提交個人敏感資料。</span></label>
+<button type="submit">送出啟用測試 →</button>
+</form>
+<p class="muted">若出現 CAPTCHA 請自行完成；啟用後請將測試文字改為 YC-F4-20260925-RECEIPT，再送第二封確認實收。</p>
+<p><a href="/contact.html">返回正式聯絡頁（目前仍為開啟郵件草稿）</a></p>
+</main></body></html>
