@@ -35,3 +35,7 @@ a,button,input{touch-action:manipulation}
 img{max-width:100%;height:auto}
 @media(max-width:360px){.layout{padding-inline:14px}.nav{gap:4px 12px}.nav a{font-size:.8rem}.book-card{grid-template-columns:37% 63%}.book-card .card-inner{padding:10px}.book-card .book-img{padding:10px}}
 @media(forced-colors:active){.btn,.tag{border:1px solid CanvasText}}
+
+/* Frame 4 staged content integration. Keep Frame 3 mobile-artwork CSS changes for Frame 5 batch deployment. */
+.release-list{display:grid;gap:18px;margin:26px 0}.release-list .mini{min-height:auto}.contact-form{display:grid;gap:12px;padding:25px;background:#fff;border:1px solid var(--line);border-radius:16px}.contact-form label{font-weight:600}.contact-form input,.contact-form textarea,.contact-form select{width:100%;max-width:100%;padding:12px 14px;border:1px solid #aebfd0;border-radius:10px;background:#fff;font:inherit;color:var(--ink)}.contact-form textarea{resize:vertical}.contact-form .btn{justify-self:start;font:inherit;cursor:pointer}.related-section .btn{margin:0 8px 10px 0}.release-list h2{font-size:1.5rem}.release-list h3{margin:.1em 0}
+@media(max-width:620px){.contact-form{padding:18px}.contact-form .btn{justify-self:stretch;white-space:normal;text-align:center}.related-section .btn{width:100%}}
