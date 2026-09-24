@@ -19,31 +19,62 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Verify public-only website
+      - name: Verify public-only website and SEO
         shell: bash
         run: |
           set -euo pipefail
-          test -f index.html
-          test -f books/cut-to-one.html
-          test -f books/bian-le-you-mei-bian.html
-          test -f assets/covers/cut-to-one.webp
           test ! -e internal
           test ! -e QA-manifest.json
+          test -f assets/covers/cut-to-one.webp
+          test -f assets/feat/cut-to-one-mobile.webp
+          test -f assets/og/home.png
+          test -f assets/og/cut-to-one.png
+          test -f assets/og/bian-le-you-mei-bian.png
+          test -f contact.js
+          test -f site-search.js
+          test -f robots.txt
+          test -f sitemap.xml
+          grep -q '/releases.html' sitemap.xml
+          grep -q '/reading/site-announcement.html' sitemap.xml
+          if grep -q '/search.html' sitemap.xml; then exit 1; fi
+          grep -q 'noindex' search.html
+          grep -q 'noindex' 404.html
+          for page in index.html books.html books/cut-to-one.html books/bian-le-you-mei-bian.html reading.html reading/site-announcement.html releases.html about.html contact.html search.html 404.html; do
+            grep -qi '<title' "$page"
+            grep -q 'canonical' "$page"
+            grep -q 'og:image' "$page"
+          done
+          echo 'PUBLIC_CONTENT_AND_SEO_STATIC=PASS'
+      - name: Build explicit public-only release
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p _site/assets _site/books _site/reading
+          cp -R assets/. _site/assets/
+          cp books/cut-to-one.html books/bian-le-you-mei-bian.html _site/books/
+          cp reading/site-announcement.html _site/reading/
+          cp index.html books.html reading.html releases.html about.html contact.html search.html 404.html style.css search.js site-search.js contact.js robots.txt sitemap.xml favicon.svg _site/
+          touch _site/.nojekyll
+          test ! -e _site/.github
+          test ! -e _site/internal
+          test ! -e _site/README.md
+          test ! -e _site/QA-manifest.json
+          echo 'PUBLIC_ONLY_ARTIFACT=PASS'
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: .
+          path: _site
       - name: Deploy Pages
         id: deployment
         uses: actions/deploy-pages@v4
-      - name: Verify live HTTPS pages
+      - name: Verify live HTTPS pages and fallback
         shell: bash
         run: |
           set -euo pipefail
           base='https://friendgogle-bot.github.io'
-          for route in / /books.html /books/cut-to-one.html /books/bian-le-you-mei-bian.html /reading.html /about.html /contact.html /sitemap.xml /assets/covers/cut-to-one.webp; do
+          for route in / /books.html /books/cut-to-one.html /books/bian-le-you-mei-bian.html /reading.html /reading/site-announcement.html /releases.html /about.html /contact.html /search.html /sitemap.xml /robots.txt /style.css /site-search.js /contact.js /assets/covers/cut-to-one.webp /assets/feat/cut-to-one-mobile.webp /assets/og/home.png /404.html; do
             echo "Checking ${base}${route}"
             curl --fail --silent --show-error --location --retry 12 --retry-delay 5 --retry-all-errors --max-time 25 "${base}${route}" -o /tmp/yuanche-check
             test -s /tmp/yuanche-check
@@ -53,4 +84,12 @@ jobs:
           grep -q '探索作品' /tmp/yuanche-home.html
           curl --fail --silent --show-error --location "${base}/contact.html" -o /tmp/yuanche-contact.html
           grep -q 'yuanche.workflow@gmail.com' /tmp/yuanche-contact.html
+          grep -q '自行傳送' /tmp/yuanche-contact.html
+          curl --fail --silent --show-error --location "${base}/sitemap.xml" -o /tmp/yuanche-sitemap.xml
+          grep -q 'releases.html' /tmp/yuanche-sitemap.xml
+          grep -q 'reading/site-announcement.html' /tmp/yuanche-sitemap.xml
+          code="$(curl --silent --show-error --location -o /tmp/yuanche-not-found -w '%{http_code}' "${base}/__yuanche_missing_frame5_20260925")"
+          test "$code" = '404'
+          grep -q '這個頁面暫時找不到' /tmp/yuanche-not-found
           echo 'PUBLIC_SITE_HTTPS_SMOKE=PASS'
+          echo 'CUSTOM_404_HTTP_STATUS=PASS'
