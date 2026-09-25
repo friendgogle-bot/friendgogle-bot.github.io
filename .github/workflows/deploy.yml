@@ -32,8 +32,8 @@ jobs:
           test -f assets/og/bian-le-you-mei-bian.png
           test -f contact.js
           node scripts/verify-contact-formspree.mjs
-          if grep -q 'FORM_ID_REQUIRED' contact.html; then echo 'Formspree form ID is not configured; release denied'; exit 1; fi
-          grep -Eq 'action="https://formspree.io/f/[A-Za-z0-9]+"' contact.html
+          if grep -q 'FORM_ID_REQUIRED' contact.html; then echo 'Formspree endpoint missing'; exit 1; fi
+          grep -Eq 'action="https://formspree.io/f/[a-zA-Z0-9]+"' contact.html
           test -f site-search.js
           test -f robots.txt
           test -f sitemap.xml
@@ -44,6 +44,10 @@ jobs:
           grep -q 'noindex' 404.html
           grep -q 'noindex,nofollow,noarchive' contact-activation-test-20260925.html
           grep -q 'https://formsubmit.co/yuanche.workflow@gmail.com' contact-activation-test-20260925.html
+          grep -q 'noindex,nofollow,noarchive' contact-formspree-test-20260925.html
+          grep -q 'https://formspree.io/f/xwlpqwog' contact-formspree-test-20260925.html
+          grep -q 'name="consent"' contact-formspree-test-20260925.html
+          if grep -q 'contact-formspree-test-20260925.html' sitemap.xml; then exit 1; fi
           if grep -q 'contact-activation-test-20260925.html' sitemap.xml; then exit 1; fi
           for page in index.html books.html books/cut-to-one.html books/bian-le-you-mei-bian.html reading.html reading/site-announcement.html releases.html about.html contact.html search.html 404.html; do
             grep -qi '<title' "$page"
@@ -59,7 +63,7 @@ jobs:
           cp -R assets/. _site/assets/
           cp books/cut-to-one.html books/bian-le-you-mei-bian.html _site/books/
           cp reading/site-announcement.html _site/reading/
-          cp index.html books.html reading.html releases.html about.html contact.html contact-activation-test-20260925.html search.html 404.html style.css search.js site-search.js contact.js robots.txt sitemap.xml favicon.svg _site/
+          cp index.html books.html reading.html releases.html about.html contact.html contact-activation-test-20260925.html contact-formspree-test-20260925.html search.html 404.html style.css search.js site-search.js contact.js robots.txt sitemap.xml favicon.svg _site/
           touch _site/.nojekyll
           test ! -e _site/.github
           test ! -e _site/internal
@@ -90,9 +94,12 @@ jobs:
           grep -q '探索作品' /tmp/yuanche-home.html
           curl --fail --silent --show-error --location "${base}/contact-activation-test-20260925.html" -o /tmp/yuanche-activation.html
           grep -q 'https://formsubmit.co/yuanche.workflow@gmail.com' /tmp/yuanche-activation.html
+          curl --fail --silent --show-error --location --retry 12 --retry-delay 5 --retry-all-errors "${base}/contact-formspree-test-20260925.html" -o /tmp/yuanche-formspree-test.html
+          grep -q 'https://formspree.io/f/xwlpqwog' /tmp/yuanche-formspree-test.html
+          grep -q 'noindex,nofollow,noarchive' /tmp/yuanche-formspree-test.html
           curl --fail --silent --show-error --location "${base}/contact.html" -o /tmp/yuanche-contact.html
           grep -q 'yuanche.workflow@gmail.com' /tmp/yuanche-contact.html
-          grep -q 'https://formspree.io/f/' /tmp/yuanche-contact.html
+          grep -q 'https://formspree.io/f/xwlpqwog' /tmp/yuanche-contact.html
           grep -q 'name="_gotcha"' /tmp/yuanche-contact.html
           grep -q 'name="consent"' /tmp/yuanche-contact.html
           curl --fail --silent --show-error --location "${base}/sitemap.xml" -o /tmp/yuanche-sitemap.xml
