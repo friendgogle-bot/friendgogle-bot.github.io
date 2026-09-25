@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="strict-origin-when-cross-origin">
+<title>原澈｜Formspree 站內留言預發布驗收</title><link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>*,*:before,*:after{box-sizing:border-box}body{background:#f7f8fb;color:#26354b;font:17px/1.7 system-ui,-apple-system,"Noto Sans TC",sans-serif;margin:0;padding:20px}main{max-width:680px;margin:26px auto;padding:24px;background:#fff;border-radius:14px;box-shadow:0 7px 30px #26354b14}h1{font-size:1.65rem;line-height:1.35}label{display:block;margin:17px 0 7px}textarea,input,select{width:100%;font:inherit;min-height:48px;padding:10px;border:1px solid #8994a7;border-radius:8px}textarea{min-height:125px}button{border:0;background:#263b58;color:#fff;font:inherit;border-radius:8px;padding:14px 18px;margin:18px 0 12px;min-height:48px}.muted{font-size:.94rem;color:#516176}.consent{display:flex;align-items:flex-start;gap:12px}.consent input{margin-top:8px;width:21px;min-width:21px;min-height:21px;height:21px}.trap{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden}a{color:#274d80}</style>
+</head><body><main>
+<p class="muted">CONTACT QA / 僅供正式留言啟用驗收；本頁可由知道網址的人開啟，未列於官網導覽。</p>
+<h1>原澈｜Formspree 站內留言測試</h1>
+<p>這是獨立 HTTPS 測試頁，不會取代正式「聯絡原澈」頁。請只提交無敏感資訊的測試文字；Formspree 可能要求完成反垃圾驗證。</p>
+<p><strong>驗收分兩段：</strong>送出後分別到 Formspree 的 <b>Submissions</b> 查看紀錄，並到 <b>yuanche.workflow@gmail.com</b> 核對收到通知郵件；單純看到感謝頁不能當作官方信箱收件證據。</p>
+<form method="POST" action="https://formspree.io/f/xwlpqwog" accept-charset="UTF-8">
+<input type="hidden" name="subject" value="原澈官網｜Formspree 預發布驗收">
+<div class="trap" aria-hidden="true"><label for="qc-hidden">不要填寫此欄</label><input id="qc-hidden" type="text" name="_gotcha" tabindex="-1" autocomplete="off"></div>
+<label for="qc-topic">聯絡主題</label><select id="qc-topic" name="topic"><option>網站功能測試</option><option>讀者回饋</option></select>
+<label for="qc-name">稱呼（可選）</label><input id="qc-name" name="name" maxlength="80" autocomplete="name" placeholder="測試者">
+<label for="qc-email">回覆信箱（可選）</label><input id="qc-email" name="email" type="email" maxlength="254" autocomplete="email" placeholder="需要測試回覆地址時才填">
+<label for="qc-message">測試內容</label><textarea id="qc-message" name="message" required minlength="3" maxlength="500">YC-F5-20260925-FORMSPREE-01｜原澈官網站內留言預發布驗收（不含私人資料）</textarea>
+<label class="consent" for="qc-consent"><input id="qc-consent" name="consent" type="checkbox" value="同意第三方處理" required><span>我了解資料將由第三方 Formspree 處理、保存於表單後台並依通知設定發信，不填寫證件、住址、健康或財務資料。</span></label>
+<button type="submit">送出一次正式收件測試 →</button>
+</form>
+<p class="muted">提交後若頁面跳到 Formspree，是正常第三方處理流程；不代表已獨立確認 Gmail 送達。請勿重複大量測試，以免耗用免費月額度。</p>
+<p><a href="/contact.html">返回現行正式聯絡頁（郵件草稿備援）</a></p>
+</main></body></html>
