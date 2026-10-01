@@ -31,6 +31,9 @@ jobs:
           test -f assets/og/cut-to-one.png
           test -f assets/og/bian-le-you-mei-bian.png
           test -f contact.js
+          node scripts/verify-contact-formspree.mjs
+          if grep -q 'FORM_ID_REQUIRED' contact.html; then echo 'Formspree endpoint missing'; exit 1; fi
+          grep -Eq 'action="https://formspree.io/f/[a-zA-Z0-9]+"' contact.html
           test -f site-search.js
           test -f robots.txt
           test -f sitemap.xml
@@ -96,7 +99,9 @@ jobs:
           grep -q 'noindex,nofollow,noarchive' /tmp/yuanche-formspree-test.html
           curl --fail --silent --show-error --location "${base}/contact.html" -o /tmp/yuanche-contact.html
           grep -q 'yuanche.workflow@gmail.com' /tmp/yuanche-contact.html
-          grep -q '自行傳送' /tmp/yuanche-contact.html
+          grep -q 'https://formspree.io/f/xwlpqwog' /tmp/yuanche-contact.html
+          grep -q 'name="_gotcha"' /tmp/yuanche-contact.html
+          grep -q 'name="consent"' /tmp/yuanche-contact.html
           curl --fail --silent --show-error --location "${base}/sitemap.xml" -o /tmp/yuanche-sitemap.xml
           grep -q 'releases.html' /tmp/yuanche-sitemap.xml
           grep -q 'reading/site-announcement.html' /tmp/yuanche-sitemap.xml

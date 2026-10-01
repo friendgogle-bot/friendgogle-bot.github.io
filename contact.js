@@ -1,2 +1,22 @@
 "use strict";
-(()=>{const form=document.getElementById("contact-compose");if(!form)return;const status=document.getElementById("contact-guidance");form.addEventListener("submit",event=>{event.preventDefault();if(!form.reportValidity())return;const data=new FormData(form),v=k=>String(data.get(k)||"").trim();const subject="致原澈｜"+v("topic").slice(0,80);const body=["主題："+v("topic"),"稱呼："+(v("name")||"未提供"),"回覆信箱："+(v("reply")||"未提供"),"",v("message"),"","（本郵件需由寄件人自行於郵件程式傳送）"].join("\n");status.textContent="郵件草稿準備中；請在郵件程式確認收件人、內容並自行按傳送。若無法開啟，請使用頁面上的官方信箱連結。";window.location.href="mailto:yuanche.workflow@gmail.com?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);});})();
+/* Formspree handles the POST on its own origin; never assert inbox delivery from frontend state. */
+(()=>{
+  const form=document.getElementById("contact-compose");
+  const status=document.getElementById("contact-guidance");
+  if(!form||!status)return;
+  form.addEventListener("submit",event=>{
+    const message=form.elements.namedItem("message");
+    if(!message)return;
+    const trimmed=message.value.trim();
+    if(trimmed.length<3){
+      event.preventDefault();
+      message.setCustomValidity("請填寫至少三個非空白字元。");
+      message.reportValidity();
+      return;
+    }
+    message.setCustomValidity("");
+    status.textContent="正在前往表單服務，可能需要完成反機器人驗證；此提示不是原澈信箱收件回執。";
+  });
+  const message=form.elements.namedItem("message");
+  if(message)message.addEventListener("input",()=>message.setCustomValidity(""));
+})();
