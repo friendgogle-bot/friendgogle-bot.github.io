@@ -1,2 +1,14 @@
-"use strict";
-(()=>{const input=document.getElementById("site-query"),out=document.getElementById("site-results"),count=document.getElementById("site-count");if(!input||!out||!count)return;const data=[["隨時選擇當下最佳","books/sui-shi-xuan-ze-dang-xia-zui-jia.html","作品","Always Choose the Best Available Now 當下最佳 選擇 重新選擇 出版第一順位 2026 10 19"],["切到一","books/cut-to-one.html","作品","Cut-to-One 本質 唯一"],["變了又沒變","books/bian-le-you-mei-bian.html","作品","變化 關係 不變量"],["免費閱讀","reading.html","閱讀","思考與問題 作品延伸 作者短文"],["網站上線紀錄","reading/site-announcement.html","站務公告","2026 09 19 官網"],["出版動態","releases.html","公告","出版第一順位 首發 發售 購買 日期"],["關於原澈","about.html","資訊","作者 原澈 Auren Venn"],["聯絡原澈","contact.html","聯絡","留言 信箱 出版 合作"]];const norm=s=>String(s).normalize("NFKC").toLocaleLowerCase();function render(){const q=norm(input.value.trim());out.replaceChildren();let countN=0;for(const [title,href,type,terms] of data){if(!norm(title+" "+terms).includes(q))continue;const card=document.createElement("article");card.className="mini";const label=document.createElement("small");label.className="eyebrow";label.textContent=type;const h=document.createElement("h2");const a=document.createElement("a");a.href=href;a.textContent=title;h.append(a);card.append(label,h);out.append(card);countN++;}count.textContent="目前顯示 "+countN+" 個公開頁面";}input.addEventListener("input",render);const q=new URLSearchParams(location.search).get("q");if(q)input.value=q.slice(0,100);render();})();
+"use strict";(()=>{const input=document.getElementById("site-query"),out=document.getElementById("site-results"),count=document.getElementById("site-count");if(!input||!out||!count)return;const data=[
+["隨時選擇當下最佳","books/sui-shi-xuan-ze-dang-xia-zui-jia.html","作品","Always Choose the Best Available Now 當下最佳 選擇 出版第一順位"],
+["切到一","books/cut-to-one.html","作品","Cut-to-One 本質 唯一"],
+["變了又沒變","books/bian-le-you-mei-bian.html","作品","變化 關係 不變量"],
+["底層思考","reading/di-ceng-si-kao.html","思考與問題","藍紫焰 過去筆名 2025 12 15 思考 向量 底層"],
+["沒有風","reading/mei-you-feng.html","詩","風 等待 找到 生成"],
+["無畏","reading/wu-wei.html","詩","藍紫焰 時間 未來 世界"],
+["紫焰","reading/zi-yan.html","詩","藍紫焰 火 燃燒 使命"],
+["意義","reading/yi-yi.html","詩","風中詩人 現象 故事 生命"],
+["循環","reading/xun-huan.html","詩","風中詩人 春冬 生老 念念"],
+["免費閱讀","reading.html","閱讀","思考與問題 詩 歷史作品"],
+["出版動態","releases.html","公告","出版 首發 發售 購買 日期"],
+["關於原澈","about.html","資訊","作者 原澈 Auren Venn 藍紫焰 風中詩人"],
+["聯絡原澈","contact.html","聯絡","留言 信箱 出版 合作"]];const norm=s=>String(s).normalize("NFKC").toLocaleLowerCase();function render(){const q=norm(input.value.trim());out.replaceChildren();let n=0;for(const [title,href,type,terms] of data){if(!norm(title+" "+terms).includes(q))continue;const card=document.createElement("article");card.className="mini";const label=document.createElement("small");label.className="eyebrow";label.textContent=type;const h=document.createElement("h2"),a=document.createElement("a");a.href=href;a.textContent=title;h.append(a);card.append(label,h);out.append(card);n++;}count.textContent="目前顯示 "+n+" 個公開頁面";}input.addEventListener("input",render);const q=new URLSearchParams(location.search).get("q");if(q)input.value=q.slice(0,100);render();})();

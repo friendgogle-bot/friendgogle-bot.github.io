@@ -34,6 +34,10 @@ jobs:
           test -f assets/og/cut-to-one.png
           test -f assets/og/bian-le-you-mei-bian.png
           test -f assets/og/sui-shi-xuan-ze-dang-xia-zui-jia.jpg
+          test -f assets/content/about-author.webp
+          test -f assets/content/di-ceng-si-kao.webp
+          for img in mei-you-feng wu-wei zi-yan yi-yi xun-huan wu-dong-de-sheng-ming; do test -f "assets/content/${img}.webp"; done
+          test -f content.css
           test -f contact.js
           test -f site-search.js
           test -f robots.txt
@@ -41,6 +45,12 @@ jobs:
           grep -q '/releases.html' sitemap.xml
           grep -q '/reading/site-announcement.html' sitemap.xml
           grep -q '/books/sui-shi-xuan-ze-dang-xia-zui-jia.html' sitemap.xml
+          grep -q '/reading/di-ceng-si-kao.html' sitemap.xml
+          grep -q '/reading/mei-you-feng.html' sitemap.xml
+          grep -q '/reading/wu-wei.html' sitemap.xml
+          grep -q '/reading/zi-yan.html' sitemap.xml
+          grep -q '/reading/yi-yi.html' sitemap.xml
+          grep -q '/reading/xun-huan.html' sitemap.xml
           if grep -q '/search.html' sitemap.xml; then exit 1; fi
           grep -q 'noindex' search.html
           grep -q 'noindex' 404.html
@@ -51,7 +61,7 @@ jobs:
           grep -q 'name="consent"' contact-formspree-test-20260925.html
           if grep -q 'contact-formspree-test-20260925.html' sitemap.xml; then exit 1; fi
           if grep -q 'contact-activation-test-20260925.html' sitemap.xml; then exit 1; fi
-          for page in index.html books.html books/sui-shi-xuan-ze-dang-xia-zui-jia.html books/cut-to-one.html books/bian-le-you-mei-bian.html reading.html reading/site-announcement.html releases.html about.html contact.html search.html 404.html; do
+          for page in index.html books.html books/sui-shi-xuan-ze-dang-xia-zui-jia.html books/cut-to-one.html books/bian-le-you-mei-bian.html reading.html reading/site-announcement.html reading/di-ceng-si-kao.html reading/mei-you-feng.html reading/wu-wei.html reading/zi-yan.html reading/yi-yi.html reading/xun-huan.html releases.html about.html contact.html search.html 404.html; do
             grep -qi '<title' "$page"
             grep -q 'canonical' "$page"
             grep -q 'og:image' "$page"
@@ -59,6 +69,9 @@ jobs:
           grep -q '隨時選擇當下最佳' index.html
           grep -q '出版第一順位' index.html
           grep -q '目標首發 2026-10-19' books/sui-shi-xuan-ze-dang-xia-zui-jia.html
+          grep -q '藍紫焰（過去筆名）' reading/di-ceng-si-kao.html
+          grep -q '看見。分開。歸位。' about.html
+          if grep -q '文章籌備中' reading.html; then exit 1; fi
           echo 'PUBLIC_CONTENT_AND_SEO_STATIC=PASS'
       - name: Build explicit public-only release
         shell: bash
@@ -66,9 +79,9 @@ jobs:
           set -euo pipefail
           mkdir -p _site/assets _site/books _site/reading
           cp -R assets/. _site/assets/
-          cp books/sui-shi-xuan-ze-dang-xia-zui-jia.html books/cut-to-one.html books/bian-le-you-mei-bian.html _site/books/
-          cp reading/site-announcement.html _site/reading/
-          cp index.html books.html reading.html releases.html about.html contact.html contact-activation-test-20260925.html contact-formspree-test-20260925.html search.html 404.html style.css search.js site-search.js contact.js robots.txt sitemap.xml favicon.svg _site/
+          cp -R books/. _site/books/
+          cp -R reading/. _site/reading/
+          cp index.html books.html reading.html releases.html about.html contact.html contact-activation-test-20260925.html contact-formspree-test-20260925.html search.html 404.html style.css content.css search.js site-search.js contact.js robots.txt sitemap.xml favicon.svg _site/
           touch _site/.nojekyll
           test ! -e _site/.github
           test ! -e _site/internal
@@ -89,7 +102,7 @@ jobs:
         run: |
           set -euo pipefail
           base='https://friendgogle-bot.github.io'
-          for route in / /books.html /books/sui-shi-xuan-ze-dang-xia-zui-jia.html /books/cut-to-one.html /books/bian-le-you-mei-bian.html /reading.html /reading/site-announcement.html /releases.html /about.html /contact.html /search.html /sitemap.xml /robots.txt /style.css /site-search.js /contact.js /assets/covers/cut-to-one.webp /assets/covers/sui-shi-xuan-ze-dang-xia-zui-jia.webp /assets/feat/sui-shi-xuan-ze-dang-xia-zui-jia-mobile.webp /assets/feat/sui-shi-xuan-ze-dang-xia-zui-jia-desktop.webp /assets/og/sui-shi-xuan-ze-dang-xia-zui-jia.jpg /assets/og/home.png /404.html; do
+          for route in / /books.html /books/sui-shi-xuan-ze-dang-xia-zui-jia.html /books/cut-to-one.html /books/bian-le-you-mei-bian.html /reading.html /reading/site-announcement.html /reading/di-ceng-si-kao.html /reading/mei-you-feng.html /reading/wu-wei.html /reading/zi-yan.html /reading/yi-yi.html /reading/xun-huan.html /releases.html /about.html /contact.html /search.html /sitemap.xml /robots.txt /style.css /content.css /site-search.js /contact.js /assets/covers/cut-to-one.webp /assets/covers/sui-shi-xuan-ze-dang-xia-zui-jia.webp /assets/feat/sui-shi-xuan-ze-dang-xia-zui-jia-mobile.webp /assets/feat/sui-shi-xuan-ze-dang-xia-zui-jia-desktop.webp /assets/og/sui-shi-xuan-ze-dang-xia-zui-jia.jpg /assets/og/home.png /assets/content/about-author.webp /assets/content/di-ceng-si-kao.webp /assets/content/mei-you-feng.webp /assets/content/wu-wei.webp /assets/content/zi-yan.webp /assets/content/yi-yi.webp /assets/content/xun-huan.webp /assets/content/wu-dong-de-sheng-ming.webp /404.html; do
             echo "Checking ${base}${route}"
             curl --fail --silent --show-error --location --retry 12 --retry-delay 5 --retry-all-errors --max-time 25 "${base}${route}" -o /tmp/yuanche-check
             test -s /tmp/yuanche-check
@@ -97,9 +110,15 @@ jobs:
           curl --fail --silent --show-error --location "${base}/" -o /tmp/yuanche-home.html
           grep -q '隨時選擇當下最佳' /tmp/yuanche-home.html
           grep -q '出版第一順位' /tmp/yuanche-home.html
-          grep -q '探索作品' /tmp/yuanche-home.html
+          grep -q '底層思考' /tmp/yuanche-home.html
           curl --fail --silent --show-error --location "${base}/books/sui-shi-xuan-ze-dang-xia-zui-jia.html" -o /tmp/yuanche-first-book.html
           grep -q '目標首發 2026-10-19' /tmp/yuanche-first-book.html
+          curl --fail --silent --show-error --location "${base}/reading.html" -o /tmp/yuanche-reading.html
+          grep -q '底層思考' /tmp/yuanche-reading.html
+          grep -q '沒有風' /tmp/yuanche-reading.html
+          if grep -q '文章籌備中' /tmp/yuanche-reading.html; then exit 1; fi
+          curl --fail --silent --show-error --location "${base}/about.html" -o /tmp/yuanche-about.html
+          grep -q '看見。分開。歸位。' /tmp/yuanche-about.html
           curl --fail --silent --show-error --location "${base}/contact-activation-test-20260925.html" -o /tmp/yuanche-activation.html
           grep -q 'https://formsubmit.co/yuanche.workflow@gmail.com' /tmp/yuanche-activation.html
           curl --fail --silent --show-error --location --retry 12 --retry-delay 5 --retry-all-errors "${base}/contact-formspree-test-20260925.html" -o /tmp/yuanche-formspree-test.html
@@ -109,9 +128,8 @@ jobs:
           grep -q 'yuanche.workflow@gmail.com' /tmp/yuanche-contact.html
           grep -q '自行傳送' /tmp/yuanche-contact.html
           curl --fail --silent --show-error --location "${base}/sitemap.xml" -o /tmp/yuanche-sitemap.xml
-          grep -q 'releases.html' /tmp/yuanche-sitemap.xml
-          grep -q 'reading/site-announcement.html' /tmp/yuanche-sitemap.xml
-          grep -q 'books/sui-shi-xuan-ze-dang-xia-zui-jia.html' /tmp/yuanche-sitemap.xml
+          grep -q 'reading/di-ceng-si-kao.html' /tmp/yuanche-sitemap.xml
+          grep -q 'reading/xun-huan.html' /tmp/yuanche-sitemap.xml
           code="$(curl --silent --show-error --location -o /tmp/yuanche-not-found -w '%{http_code}' "${base}/__yuanche_missing_refresh_20261015")"
           test "$code" = '404'
           grep -q '這個頁面暫時找不到' /tmp/yuanche-not-found
