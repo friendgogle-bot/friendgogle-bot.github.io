@@ -39,6 +39,9 @@ jobs:
           for img in mei-you-feng wu-wei zi-yan yi-yi xun-huan wu-dong-de-sheng-ming; do test -f "assets/content/${img}.webp"; done
           test -f content.css
           test -f contact.js
+          node scripts/verify-contact-formspree.mjs
+          if grep -q 'FORM_ID_REQUIRED' contact.html; then echo 'Formspree endpoint missing'; exit 1; fi
+          grep -Eq 'action="https://formspree.io/f/[a-zA-Z0-9]+"' contact.html
           test -f site-search.js
           test -f robots.txt
           test -f sitemap.xml
@@ -137,7 +140,9 @@ jobs:
           grep -q 'noindex,nofollow,noarchive' /tmp/yuanche-formspree-test.html
           curl --fail --silent --show-error --location "${base}/contact.html" -o /tmp/yuanche-contact.html
           grep -q 'yuanche.workflow@gmail.com' /tmp/yuanche-contact.html
-          grep -q '自行傳送' /tmp/yuanche-contact.html
+          grep -q 'https://formspree.io/f/xwlpqwog' /tmp/yuanche-contact.html
+          grep -q 'name="_gotcha"' /tmp/yuanche-contact.html
+          grep -q 'name="consent"' /tmp/yuanche-contact.html
           curl --fail --silent --show-error --location "${base}/sitemap.xml" -o /tmp/yuanche-sitemap.xml
           grep -q 'reading/di-ceng-si-kao.html' /tmp/yuanche-sitemap.xml
           grep -q 'reading/xun-huan.html' /tmp/yuanche-sitemap.xml
