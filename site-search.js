@@ -1,5 +1,6 @@
 "use strict";(()=>{const input=document.getElementById("site-query"),out=document.getElementById("site-results"),count=document.getElementById("site-count");if(!input||!out||!count)return;const data=[
-["隨時選擇當下最佳","books/sui-shi-xuan-ze-dang-xia-zui-jia.html","作品","Always Choose the Best Available Now 當下最佳 選擇 出版第一順位"],
+["自主成長","books/zi-zhu-cheng-zhang.html","作品","自主成長 autonomous growth 出版 能力 成長 迴路 真實結果"],
+["隨時選擇當下最佳","books/sui-shi-xuan-ze-dang-xia-zui-jia.html","作品","Always Choose the Best Available Now 當下最佳 選擇 待出版"],
 ["切到一","books/cut-to-one.html","作品","Cut-to-One 本質 唯一"],
 ["變了又沒變","books/bian-le-you-mei-bian.html","作品","變化 關係 不變量"],
 ["底層思考","reading/di-ceng-si-kao.html","思考與問題","藍紫焰 過去筆名 2025 12 15 思考 向量 底層 本來如是"],
@@ -10,6 +11,6 @@
 ["循環","reading/xun-huan.html","詩","風中詩人 春冬 生老 念念"],
 ["舞動的生命","reading/wu-dong-de-sheng-ming.html","文章","2023 生命 影響力 創造 喜悅 意識 希望"],
 ["免費閱讀","reading.html","閱讀","思考與問題 詩 歷史作品"],
-["出版動態","releases.html","公告","出版 首發 發售 購買 日期"],
+["出版動態","releases.html","公告","出版 待出版 上市 發售 購買"],
 ["關於原澈","about.html","資訊","作者 原澈 Auren Venn 藍紫焰 風中詩人"],
 ["聯絡原澈","contact.html","聯絡","留言 信箱 出版 合作"]];const norm=s=>String(s).normalize("NFKC").toLocaleLowerCase();function render(){const q=norm(input.value.trim());out.replaceChildren();let n=0;for(const [title,href,type,terms] of data){if(!norm(title+" "+terms).includes(q))continue;const card=document.createElement("article");card.className="mini";const label=document.createElement("small");label.className="eyebrow";label.textContent=type;const h=document.createElement("h2"),a=document.createElement("a");a.href=href;a.textContent=title;h.append(a);card.append(label,h);out.append(card);n++;}count.textContent="目前顯示 "+n+" 個公開頁面";}input.addEventListener("input",render);const q=new URLSearchParams(location.search).get("q");if(q)input.value=q.slice(0,100);render();})();
