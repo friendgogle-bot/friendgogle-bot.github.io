@@ -19,13 +19,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Verify public content, image binaries and two-book state
+      - name: Verify public-only website, SEO, images and two-book state
         shell: bash
         run: |
           set -euo pipefail
           test ! -e internal
           test ! -e QA-manifest.json
-          for f in assets/covers/zi-zhu-cheng-zhang-card.webp assets/covers/sui-shi-xuan-ze-dang-xia-zui-jia-card.webp assets/og/home.png; do test -s "$f"; done
+          for f in assets/covers/zi-zhu-cheng-zhang-card.webp assets/covers/sui-shi-xuan-ze-dang-xia-zui-jia.webp assets/covers/sui-shi-xuan-ze-dang-xia-zui-jia-card.webp assets/og/home.png assets/og/sui-shi-xuan-ze-dang-xia-zui-jia.jpg assets/content/di-ceng-si-kao.webp assets/content/mei-you-feng.webp assets/content/wu-wei.webp assets/content/zi-yan.webp assets/content/yi-yi.webp assets/content/xun-huan.webp assets/content/wu-dong-de-sheng-ming.webp; do test -s "$f"; done
           test "$(file -b --mime-type assets/covers/zi-zhu-cheng-zhang-card.webp)" = "image/webp"
           test "$(file -b --mime-type assets/covers/sui-shi-xuan-ze-dang-xia-zui-jia-card.webp)" = "image/webp"
           test -f content.css
@@ -33,10 +33,28 @@ jobs:
           test -f site-search.js
           test -f robots.txt
           test -f sitemap.xml
+          grep -q '/releases.html' sitemap.xml
+          grep -q '/reading/site-announcement.html' sitemap.xml
           grep -q '/books/zi-zhu-cheng-zhang.html' sitemap.xml
           grep -q '/books/sui-shi-xuan-ze-dang-xia-zui-jia.html' sitemap.xml
+          for path in di-ceng-si-kao mei-you-feng wu-wei zi-yan yi-yi xun-huan wu-dong-de-sheng-ming; do grep -q "/reading/${path}.html" sitemap.xml; done
           if grep -q '/books/cut-to-one.html' sitemap.xml; then exit 1; fi
           if grep -q '/books/bian-le-you-mei-bian.html' sitemap.xml; then exit 1; fi
+          if grep -q '/search.html' sitemap.xml; then exit 1; fi
+          grep -q 'noindex' search.html
+          grep -q 'noindex' 404.html
+          grep -q 'noindex,nofollow,noarchive' contact-activation-test-20260925.html
+          grep -q 'https://formsubmit.co/yuanche.workflow@gmail.com' contact-activation-test-20260925.html
+          grep -q 'noindex,nofollow,noarchive' contact-formspree-test-20260925.html
+          grep -q 'https://formspree.io/f/xwlpqwog' contact-formspree-test-20260925.html
+          grep -q 'name="consent"' contact-formspree-test-20260925.html
+          if grep -q 'contact-formspree-test-20260925.html' sitemap.xml; then exit 1; fi
+          if grep -q 'contact-activation-test-20260925.html' sitemap.xml; then exit 1; fi
+          for page in index.html books.html books/zi-zhu-cheng-zhang.html books/sui-shi-xuan-ze-dang-xia-zui-jia.html reading.html reading/site-announcement.html reading/di-ceng-si-kao.html reading/mei-you-feng.html reading/wu-wei.html reading/zi-yan.html reading/yi-yi.html reading/xun-huan.html reading/wu-dong-de-sheng-ming.html releases.html about.html contact.html search.html 404.html; do
+            grep -qi '<title' "$page"
+            grep -q 'canonical' "$page"
+            grep -q 'og:image' "$page"
+          done
           test "$(grep -o 'class=\"book-card card\"' books.html | wc -l)" -eq 2
           grep -q '目前顯示 2 本' books.html
           grep -q '自主成長' books.html
@@ -53,16 +71,12 @@ jobs:
           grep -q '>待出版<' index.html
           grep -q '讓下一個能力，從真實結果中長出來' books/zi-zhu-cheng-zhang.html
           grep -q '>待出版<' books/sui-shi-xuan-ze-dang-xia-zui-jia.html
+          grep -q '藍紫焰（過去筆名）' reading/di-ceng-si-kao.html
           grep -q '本來如是' reading/di-ceng-si-kao.html
           grep -q '無法停止的生命之海' reading/wu-dong-de-sheng-ming.html
-          grep -q 'noindex,nofollow,noarchive' contact-activation-test-20260925.html
-          grep -q 'https://formsubmit.co/yuanche.workflow@gmail.com' contact-activation-test-20260925.html
-          grep -q 'noindex,nofollow,noarchive' contact-formspree-test-20260925.html
-          grep -q 'https://formspree.io/f/xwlpqwog' contact-formspree-test-20260925.html
-          grep -q 'name="consent"' contact-formspree-test-20260925.html
-          grep -q 'noindex' search.html
-          grep -q 'noindex' 404.html
-          echo 'STATIC_AND_IMAGE_QA=PASS'
+          grep -q '生命是無比的尊貴' reading/wu-dong-de-sheng-ming.html
+          if grep -q '文章籌備中' reading.html; then exit 1; fi
+          echo 'PUBLIC_CONTENT_SEO_IMAGE_QA=PASS'
       - name: Build explicit public-only release
         shell: bash
         run: |
@@ -87,12 +101,12 @@ jobs:
       - name: Deploy Pages
         id: deployment
         uses: actions/deploy-pages@v4
-      - name: Verify live site and actual image decoding
+      - name: Verify live HTTPS, content, fallback and actual image decoding
         shell: bash
         run: |
           set -euo pipefail
           base='https://friendgogle-bot.github.io'
-          for route in / /books.html /books/zi-zhu-cheng-zhang.html /books/sui-shi-xuan-ze-dang-xia-zui-jia.html /reading.html /reading/di-ceng-si-kao.html /reading/wu-dong-de-sheng-ming.html /releases.html /about.html /contact.html /search.html /sitemap.xml /robots.txt /style.css /content.css /site-search.js /contact.js /assets/covers/zi-zhu-cheng-zhang-card.webp /assets/covers/sui-shi-xuan-ze-dang-xia-zui-jia-card.webp /assets/og/home.png /404.html; do
+          for route in / /books.html /books/zi-zhu-cheng-zhang.html /books/sui-shi-xuan-ze-dang-xia-zui-jia.html /reading.html /reading/site-announcement.html /reading/di-ceng-si-kao.html /reading/mei-you-feng.html /reading/wu-wei.html /reading/zi-yan.html /reading/yi-yi.html /reading/xun-huan.html /reading/wu-dong-de-sheng-ming.html /releases.html /about.html /contact.html /search.html /sitemap.xml /robots.txt /style.css /content.css /site-search.js /contact.js /assets/covers/zi-zhu-cheng-zhang-card.webp /assets/covers/sui-shi-xuan-ze-dang-xia-zui-jia-card.webp /assets/og/home.png /assets/content/mei-you-feng.webp /assets/content/wu-wei.webp /assets/content/zi-yan.webp /assets/content/yi-yi.webp /assets/content/xun-huan.webp /assets/content/wu-dong-de-sheng-ming.webp /404.html; do
             curl --fail --silent --show-error --location --retry 12 --retry-delay 5 --retry-all-errors --max-time 25 "${base}${route}" -o /tmp/yuanche-check
             test -s /tmp/yuanche-check
           done
@@ -103,6 +117,10 @@ jobs:
           test "$(grep -o 'class=\"book-card card\"' /tmp/books.html | wc -l)" -eq 2
           if grep -q '切到一' /tmp/books.html; then exit 1; fi
           if grep -q '變了又沒變' /tmp/books.html; then exit 1; fi
+          curl --fail --silent --show-error --location "${base}/releases.html" -o /tmp/releases.html
+          grep -q '目前只列兩本書' /tmp/releases.html
+          if grep -q '切到一' /tmp/releases.html; then exit 1; fi
+          if grep -q '變了又沒變' /tmp/releases.html; then exit 1; fi
           curl --fail --silent --show-error --location "${base}/about.html" -o /tmp/about.html
           if grep -q 'about-author.webp' /tmp/about.html; then exit 1; fi
           grep -q '看見。分開。歸位。' /tmp/about.html
@@ -113,9 +131,15 @@ jobs:
           grep -q '>待出版<' /tmp/home.html
           curl --fail --silent --show-error --location "${base}/reading/di-ceng-si-kao.html" -o /tmp/bottom-thinking.html
           grep -q '本來如是' /tmp/bottom-thinking.html
+          curl --fail --silent --show-error --location "${base}/reading/wu-dong-de-sheng-ming.html" -o /tmp/dancing-life.html
+          grep -q '生命是無比的尊貴' /tmp/dancing-life.html
           curl --fail --silent --show-error --location "${base}/contact.html" -o /tmp/contact.html
           grep -q 'yuanche.workflow@gmail.com' /tmp/contact.html
+          grep -q '自行傳送' /tmp/contact.html
+          curl --fail --silent --show-error --location "${base}/sitemap.xml" -o /tmp/sitemap.xml
+          grep -q 'books/zi-zhu-cheng-zhang.html' /tmp/sitemap.xml
+          if grep -q 'books/cut-to-one.html' /tmp/sitemap.xml; then exit 1; fi
           code="$(curl --silent --show-error --location -o /tmp/not-found -w '%{http_code}' "${base}/__yuanche_missing_image_fix_20261015")"
           test "$code" = '404'
           grep -q '這個頁面暫時找不到' /tmp/not-found
-          echo 'LIVE_IMAGE_AND_SITE_QA=PASS'
+          echo 'PUBLIC_SITE_IMAGE_AND_CONTENT_QA=PASS'
