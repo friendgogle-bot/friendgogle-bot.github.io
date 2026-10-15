@@ -1,8 +1,6 @@
 "use strict";(()=>{const input=document.getElementById("site-query"),out=document.getElementById("site-results"),count=document.getElementById("site-count");if(!input||!out||!count)return;const data=[
 ["自主成長","books/zi-zhu-cheng-zhang.html","作品","自主成長 autonomous growth 出版 能力 成長 迴路 真實結果"],
 ["隨時選擇當下最佳","books/sui-shi-xuan-ze-dang-xia-zui-jia.html","作品","Always Choose the Best Available Now 當下最佳 選擇 待出版"],
-["切到一","books/cut-to-one.html","作品","Cut-to-One 本質 唯一"],
-["變了又沒變","books/bian-le-you-mei-bian.html","作品","變化 關係 不變量"],
 ["底層思考","reading/di-ceng-si-kao.html","思考與問題","藍紫焰 過去筆名 2025 12 15 思考 向量 底層 本來如是"],
 ["沒有風","reading/mei-you-feng.html","詩","風 等待 找到 生成"],
 ["無畏","reading/wu-wei.html","詩","藍紫焰 時間 未來 世界"],
